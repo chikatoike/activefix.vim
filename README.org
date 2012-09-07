@@ -1,0 +1,2 @@
+* activefix.vim
+  activefix.vim is a syntax checking plugin for Vim.
