@@ -1,2 +1,10 @@
 * activefix.vim
   activefix.vim is a syntax checking plugin for Vim.
+
+* Requires
+- vimproc https://github.com/Shougo/vimproc
+
+* Thanks
+  下記のソースコードを改変し、使用しています。
+- quickrun https://github.com/thinca/vim-quickrun
+- syntastic https://github.com/scrooloose/syntastic
