@@ -32,9 +32,6 @@ let g:activefix_use_compiler_plugin =
 let g:activefix_allow_auto_save =
       \ get(g:, 'activefix_allow_auto_save', 0)
 
-let g:activefix_updatetime =
-      \ get(g:, 'activefix_updatetime', 0)
-
 let g:activefix_quickfix_auto_open =
       \ get(g:, 'activefix_quickfix_auto_open', 1)
 
@@ -74,9 +71,18 @@ endif
 let g:activefix_output_verbose =
       \ get(g:, 'activefix_output_verbose', 0)
 
+let g:activefix_enable_on_readonly =
+      \ get(g:, 'activefix_enable_on_readonly', 0)
+
 " let g:activefix_encoding =
 "       \ get(g:, 'activefix_encoding', '')
 " 
+" let g:activefix_updatetime_start_delay =
+"       \ get(g:, 'activefix_updatetime_start_delay', 0)
+
+let g:activefix_updatetime_running =
+      \ get(g:, 'activefix_updatetime_running', 0)
+ 
 " let g:activefix_activation_event =
 "       \ get(g:, 'activefix_activation_event', {})
 " call extend(g:activefix_activation_event, {
@@ -155,6 +161,10 @@ function! activefix#is_file_enable(file)
 
   if filetype ==# 'vim'
     " filetype vim is not supported
+    return 0
+  endif
+
+  if !g:activefix_enable_on_readonly && activefix#is_readonly(a:file)
     return 0
   endif
 
@@ -374,7 +384,7 @@ endfunction
 "
 " When {expr} starts with '%', return file name
 " of target of syntax checking.
-" Target file may be in the current buffer.
+" Target file may not be in the current buffer.
 "
 " NOTE: This function may throws exception
 " that name starts with 'activefix'
@@ -399,22 +409,18 @@ function! activefix#get_filetype(expr)
   endif
 endfunction
 
+function! activefix#is_readonly(expr)
+  let path = expand(a:expr)
+  if bufloaded(path)
+    return getbufvar(a:expr, '&readonly') || getbufvar(a:expr, '&nomodifiable')
+  else
+    return !filewritable(path)
+  endif
+endfunction
+
 " debug {{{
 let g:activefix_debug_exception =
       \ get(g:, 'activefix_debug_exception', 0)
-
-function! activefix#debug_reload()
-  unlet! g:loaded_activefix
-  runtime! plugin/activefix.vim
-  " runtime! autoload/activefix.vim
-  runtime! autoload/activefix/*.vim
-  runtime! autoload/activefix/analyzer/**/*.vim
-  runtime! autoload/activefix/builder/**/*.vim
-  " runtime! autoload/activefix/checker/**/*.vim
-  runtime! autoload/activefix/hook/**/*.vim
-  runtime! autoload/activefix/runner/**/*.vim
-  runtime! autoload/activefix/session/**/*.vim
-endfunction
 
 function! activefix#scope()
   return s:

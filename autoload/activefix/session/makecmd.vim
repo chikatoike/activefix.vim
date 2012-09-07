@@ -14,7 +14,7 @@ function! s:session.init(event, file)
 
   let list = activefix#config#get_config(a:file, 0)
   if empty(list)
-    return
+    return 0
   endif
 
   " TODO support config array
@@ -26,10 +26,7 @@ function! s:session.run()
   let self.hooks = activefix#module#make_hooks(self)
   call self.invoke_hook('ready')
 
-  if mode() ==# 'i'
-    echoerr "makecmd can't execute in insert-mode"
-    return
-  endif
+  " makecmd don't support temporary file
 
   let loclist = s:execute_makecmd(self.config,
         \ g:activefix_use_locationlist, 

@@ -55,7 +55,7 @@ function! s:runner.run(commands, input, session)
 
   " TODO
   if self.config.updatetime < 0
-    let self.config.updatetime = g:activefix_updatetime
+    let self.config.updatetime = g:activefix_updatetime_running
   endif
 
   if self.config.updatetime
