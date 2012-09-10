@@ -9,15 +9,15 @@ if g:activefix_enable_signs
   execute 'sign define activefixWarning text=' . g:activefix_signs_warning_symbol . ' texthl=todo'
 endif
 
-function! activefix#sign#clear()
-  for i in s:bufsignids()
+function! activefix#sign#clear(oldsigns)
+  for i in a:oldsigns
     execute "sign unplace " i
     call remove(s:bufsignids(), index(s:bufsignids(), i))
   endfor
 endfunction
 
 function! activefix#sign#set(loclist)
-  call activefix#sign#clear()
+  let oldsigns = copy(s:bufsignids())
 
   for item in a:loclist
     if has_key(item, 'filename')
@@ -34,6 +34,7 @@ function! activefix#sign#set(loclist)
     let s:next_sign_id += 1
   endfor
 
+  call activefix#sign#clear(oldsigns)
   let s:first_sign_id = s:next_sign_id
 endfunction
 
