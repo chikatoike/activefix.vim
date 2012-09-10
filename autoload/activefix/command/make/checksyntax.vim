@@ -11,7 +11,7 @@ let g:activefix_make_checksyntax_findpath =
       \ get(g:, 'activefix_make_checksyntax_findpath', '.;')
 
 function! activefix#command#make#checksyntax#config()
-  if g:activefix_make_checksyntax_findpath ==# ''
+  if g:activefix_make_checksyntax_findpath !=# ''
     let dir = findfile(g:activefix_make_checksyntax_makefile, g:activefix_make_checksyntax_findpath)
   else
     " use &path for searching Makefile

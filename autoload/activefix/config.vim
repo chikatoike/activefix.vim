@@ -17,7 +17,7 @@ function! activefix#config#_expand(tempfile, expr)
   let s:config_stack[0].target[activefix#unify_path(expand(expr))] = ''
 
   " TODO expr != "%"の場合
-  if !getbufvar(a:expr, '&modified')
+  if !getbufvar(expr, '&modified')
     return expand(a:expr)
   endif
 
