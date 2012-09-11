@@ -24,6 +24,7 @@ augroup plugin-activefix-plugin
   autocmd!
   autocmd BufReadPost  * call activefix#_on_bufreadpost()
   autocmd BufWritePost * call activefix#_on_bufwritepost()
+  autocmd BufDelete    * call activefix#_on_bufdelete()
   autocmd CursorHold   * call activefix#_on_cursorhold(0)
   autocmd CursorHoldI  * call activefix#_on_cursorhold(1)
 augroup END

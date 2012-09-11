@@ -38,10 +38,12 @@ endfunction
 
 function! s:hook.on_success(session, context)
   call s:trace('success', a:context)
+  let self._tick = reltime()
 endfunction
 
 function! s:hook.on_failure(session, context)
   call s:trace('failure', a:context)
+  let self._tick = reltime()
 endfunction
 
 function! s:hook.on_filter(session, context)
@@ -53,13 +55,14 @@ function! s:hook.on_finish(session, context)
 endfunction
 
 function! s:hook.on_exit(session, context)
-  call s:trace('exit', a:context)
+  let elapsed = string(reltimestr(reltime(self._tick)))
+  call s:trace('exit', a:context, {'finishing time': elapsed})
 endfunction
 
 let s:logpath = expand('<sfile>:p:h') . '/_afdebug.log'
 
 function! s:trace(point, ...)
-  let str = printf('%s: hook-%s: %s', strftime('%X'), a:point, string(a:000))
+  let str = printf('%s: hook-%s: %s', strftime('%c'), a:point, string(a:000))
   call s:addlog(str)
   " call s:addlog('ls: ' . expand('*.c'))
 endfunction

@@ -82,9 +82,12 @@ let g:activefix_enable_on_readonly =
 
 let g:activefix_updatetime_running =
       \ get(g:, 'activefix_updatetime_running', 0)
+
+let g:activefix_updatetime_minimun =
+      \ get(g:, 'activefix_updatetime_minimun', 500)
  
-" let g:activefix_activation_event =
-"       \ get(g:, 'activefix_activation_event', {})
+let g:activefix_activation_event =
+      \ get(g:, 'activefix_activation_event', {})
 " call extend(g:activefix_activation_event, {
 "       \ 'read': 1,
 "       \ 'write': 1,
@@ -112,7 +115,16 @@ function! activefix#_on_bufwritepost()
   call s:event_proc('#BufWritePost')
 endfunction
 
+function! activefix#_on_bufdelete()
+  call activefix#kill_file_session(expand('%:p'))
+endfunction
+
 function! activefix#_on_cursorhold(insert)
+  if &updatetime < g:activefix_updatetime_minimun
+    " Ignore CursorHold event
+    return
+  endif
+
   let path = expand('%:p')
   if !activefix#is_need_updating(path)
     return
@@ -131,6 +143,10 @@ endfunction
 
 let s:status_global_enable = 1
 let s:status_filetype = {}
+
+function! activefix#set_enable(enable)
+  let s:status_global_enable = a:enable
+endfunction
 
 function! activefix#set_enable_filetype(enable)
   let s:status_global_enable = a:enable
@@ -194,6 +210,12 @@ function! s:event_proc(event)
 endfunction
 
 function! s:start_session(event, method)
+  if a:event ==# '#CursorHold' && !get(g:activefix_activation_event, 'hold', 1)
+    return
+  elseif a:event ==# '#CursorHoldI' && !get(g:activefix_activation_event, 'hold_insert', 1)
+    return
+  endif
+
   let file = expand('%:p')
   if !activefix#is_file_enable(file)
     return
