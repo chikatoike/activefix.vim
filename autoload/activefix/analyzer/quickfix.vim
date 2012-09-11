@@ -21,6 +21,10 @@ endfunction
 function! s:analyzer.finish(session)
   let string = self._result
 
+  if activefix#util#is_cmdwin()
+    return []
+  endif
+
   let self.loclist = s:execute_getexpr(
         \ string, self.config.errorformat,
         \ g:activefix_use_locationlist, 
