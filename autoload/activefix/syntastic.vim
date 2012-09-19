@@ -44,7 +44,10 @@ function! activefix#syntastic#get_config(filetype)
 
   let [type, config] = s:get_syntastic_config('syntastic', filetype)
   if type is 0
-    return
+    return 0
+  elseif type(type) == type([])
+    " NOTE: syntastic syntax checkers may return empty list as error.
+    return 0
   endif
 
   " remove temporary environment variable from command.
