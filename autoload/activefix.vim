@@ -125,11 +125,6 @@ function! activefix#_on_cursorhold(insert)
     return
   endif
 
-  let path = expand('%:p')
-  if !activefix#is_need_updating(path)
-    return
-  endif
-
   call s:event_proc(a:insert ? '#CursorHoldI' : '#CursorHold')
 endfunction
 
@@ -355,10 +350,6 @@ function! activefix#is_running_buffer(path)
     endif
   endfor
   return 0
-endfunction
-
-function! activefix#is_need_updating(path)
-  return &modified
 endfunction
 
 function! activefix#kill_file_session(path)
